@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:1.23.3-alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "85:85"
+    depends_on:
+      - frontend-service
+
+  frontend-service:
+    build:
+      context: ./apps/frontend-service
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - SECRET=my-secret
+      - USERS_URL=http://users-service:3000
+      - BOOKS_URL=http://books-service:3001
+      - REVIEWS_URL=http://reviews-service:3002
+    depends_on:
+      - users-service
+      - books-service
+      - reviews-service
+
+  users-service:
+    build:
+      context: ./apps/users-service
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=books_db
+    depends_on:
+      - db
+
+  books-service:
+    build:
+      context: ./apps/books-service
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=books_db
+    depends_on:
+      - db
+
+  reviews-service:
+    build:
+      context: ./apps/reviews-service
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=books_db
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3310:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=books_db
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./db-scripts:/docker-entrypoint-initdb.d
+
+  portainer:
+    image: portainer/portainer-ce:alpine
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer-data:/data
+
+volumes:
+  db-data:
+  portainer-data:
