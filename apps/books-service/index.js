@@ -13,6 +13,7 @@ const pool = mysql.createPool({
 app.get('/books', async (_, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM books');
+    rows.forEach(row => {delete row.synopsis})
     return res.status(200).send({books: rows})
   } catch (error) {
     console.error('Failed to get books:', error);

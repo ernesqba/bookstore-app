@@ -20,6 +20,7 @@ app.get('/reviews/book/:id', async (req, res) => {
       'SELECT * FROM reviews WHERE book_id = ?',
       [bookId]
     );
+    rows.forEach(row => {delete row.color})
 
     res.status(200).send({reviews: rows});
   } catch (error) {

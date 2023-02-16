@@ -11,6 +11,7 @@ services:
       - frontend-service
 
   frontend-service:
+    image: ernesqba/bookstore-frontend-service:v1
     build:
       context: ./apps/frontend-service
       dockerfile: Dockerfile
@@ -28,6 +29,7 @@ services:
       - reviews-service
 
   users-service:
+    image: ernesqba/bookstore-users-service:v1
     build:
       context: ./apps/users-service
       dockerfile: Dockerfile
@@ -43,6 +45,7 @@ services:
       - db
 
   books-service:
+    image: ernesqba/bookstore-books-service:v1
     build:
       context: ./apps/books-service
       dockerfile: Dockerfile
@@ -58,6 +61,7 @@ services:
       - db
 
   reviews-service:
+    image: ernesqba/bookstore-reviews-service:v1
     build:
       context: ./apps/reviews-service
       dockerfile: Dockerfile

@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 
 app.get('/users', async (_, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM users');
+    const [rows] = await pool.query('SELECT user_id, email, password FROM users');
     rows.forEach(row => {delete row.password})
 
     return res.status(200).send({users: rows});
@@ -33,7 +33,7 @@ app.post('/login', async (req, res) => {
   }
 
   try {
-    const [rows] = await pool.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password]);
+    const [rows] = await pool.query('SELECT user_id, email, password FROM users WHERE email = ? AND password = ?', [email, password]);
 
     if (rows.length === 0) {
       return res.status(401).send({ message: 'Invalid email or password' });
@@ -63,7 +63,7 @@ app.post('/signup', async (req, res) => {
     }
 
     await pool.query('INSERT INTO users (email, password, first_name, last_name) VALUES (?, ?, ?, ?)', [email, password, first_name, last_name]);
-    const [rows2] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+    const [rows2] = await pool.query('SELECT user_id, email, password FROM users WHERE email = ?', [email]);
 
     res.status(201).send({user: rows2[0]})
   } catch (err) {
