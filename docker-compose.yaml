@@ -14,8 +14,8 @@ services:
     build:
       context: ./apps/frontend-service
       dockerfile: Dockerfile
-    ports:
-      - "4000:4000"
+    # ports:
+    #   - "4000:4000"
     environment:
       - PORT=4000
       - SECRET=my-secret
@@ -31,8 +31,8 @@ services:
     build:
       context: ./apps/users-service
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     environment:
       - PORT=3000
       - DB_HOST=db
@@ -46,8 +46,8 @@ services:
     build:
       context: ./apps/books-service
       dockerfile: Dockerfile
-    ports:
-      - "3001:3001"
+    # ports:
+    #   - "3001:3001"
     environment:
       - PORT=3001
       - DB_HOST=db
@@ -61,8 +61,8 @@ services:
     build:
       context: ./apps/reviews-service
       dockerfile: Dockerfile
-    ports:
-      - "3002:3002"
+    # ports:
+    #   - "3002:3002"
     environment:
       - PORT=3002
       - DB_HOST=db
