@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: copy-files-to-pvc
+spec:
+  containers:
+  - name: copy-files
+    image: alpine
+    command: ["sleep"]
+    args: ["3600"]
+    volumeMounts:
+    - name: pvc-volume
+      mountPath: /db-scripts
+  volumes:
+  - name: pvc-volume
+    persistentVolumeClaim:
+      claimName: db-scripts
