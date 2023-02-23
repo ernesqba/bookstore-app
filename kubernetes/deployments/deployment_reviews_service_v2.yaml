@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookstore-reviews-service-v2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bookstore-reviews-service
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: bookstore-reviews-service
+        version: v2
+    spec:
+      containers:
+        - name: bookstore-reviews-service
+          image: ernesqba/bookstore-reviews-service:v2
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-reviews-service-config-map
+                  key: PORT
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-reviews-service-config-map
+                  key: DB_HOST
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: bookstore-reviews-service-secret
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bookstore-reviews-service-secret
+                  key: DB_PASSWORD
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-reviews-service-config-map
+                  key: DB_NAME
+          ports:
+          - name: health-port
+            containerPort: 3002
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: health-port
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: health-port
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: bookstore-reviews-service-v2-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: bookstore-reviews-service-v2
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50

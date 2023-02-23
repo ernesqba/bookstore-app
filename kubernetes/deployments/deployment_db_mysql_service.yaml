@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-mysql-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-mysql-service
+  template:
+    metadata:
+      labels:
+        app: db-mysql-service
+    spec:
+      containers:
+      - name: db-mysql-service
+        image: mysql:8.0
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-mysql-service-secret
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: db-mysql-service-config-map
+              key: MYSQL_DATABASE
+        volumeMounts:
+        - name: db-data
+          mountPath: /var/lib/mysql
+        - name: db-scripts
+          mountPath: /docker-entrypoint-initdb.d
+          readOnly: true
+      volumes:
+      - name: db-data
+        persistentVolumeClaim:
+          claimName: db-data
+      - name: db-scripts
+        persistentVolumeClaim:
+          claimName: db-scripts

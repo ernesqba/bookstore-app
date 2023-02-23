@@ -28,6 +28,7 @@ CREATE TABLE `books` (
   `author` varchar(255) NOT NULL,
   `published_date` date DEFAULT NULL,
   `genre` varchar(255) DEFAULT NULL,
+  `synopsis` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`book_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -38,7 +39,7 @@ CREATE TABLE `books` (
 
 LOCK TABLES `books` WRITE;
 /*!40000 ALTER TABLE `books` DISABLE KEYS */;
-INSERT INTO `books` VALUES (1,'To Kill a Mockingbird','Harper Lee','1960-07-11','Classic'),(2,'The Great Gatsby','F. Scott Fitzgerald','1925-04-10','Classic'),(3,'Pride and Prejudice','Jane Austen','1813-01-28','Romance');
+INSERT INTO `books` VALUES (1,'To Kill a Mockingbird','Harper Lee','1960-07-11','Classic','synpsis 1'),(2,'The Great Gatsby','F. Scott Fitzgerald','1925-04-10','Classic','synopsis 2'),(3,'Pride and Prejudice','Jane Austen','1813-01-28','Romance','synopsis 3');
 /*!40000 ALTER TABLE `books` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-14 17:21:21
+-- Dump completed on 2023-02-16 19:42:52

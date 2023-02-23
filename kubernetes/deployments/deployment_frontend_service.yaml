@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookstore-frontend-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bookstore-frontend-service
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: bookstore-frontend-service
+        version: v1
+    spec:
+      containers:
+        - name: bookstore-frontend-service
+          image: ernesqba/bookstore-frontend-service:v1
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-frontend-service-config-map
+                  key: PORT
+            - name: USERS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-frontend-service-config-map
+                  key: USERS_URL
+            - name: BOOKS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-frontend-service-config-map
+                  key: BOOKS_URL
+            - name: REVIEWS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: bookstore-frontend-service-config-map
+                  key: REVIEWS_URL
+            - name: SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bookstore-frontend-service-secret
+                  key: SECRET
+          ports:
+          - name: health-port
+            containerPort: 4000
+          livenessProbe:
+            httpGet:
+              path: /
+              port: health-port
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: health-port
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: bookstore-frontend-service-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: bookstore-frontend-service
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
