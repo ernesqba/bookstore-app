@@ -28,13 +28,14 @@ CREATE TABLE `reviews` (
   `user_id` int NOT NULL,
   `rating` int DEFAULT NULL,
   `comments` text,
-  `review_date` date DEFAULT NULL,
+  `review_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `color` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`review_id`),
   KEY `book_id` (`book_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`book_id`) REFERENCES `books` (`book_id`),
   CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +44,7 @@ CREATE TABLE `reviews` (
 
 LOCK TABLES `reviews` WRITE;
 /*!40000 ALTER TABLE `reviews` DISABLE KEYS */;
-INSERT INTO `reviews` VALUES (1,1,1,4,'Great book, highly recommend!','2022-01-01'),(2,1,2,5,'One of my all-time favorites','2022-01-02'),(3,2,1,3,'Not my favorite, but worth a read','2022-01-03'),(4,3,2,4,'I loved this book and couldn\'t put it down','2022-01-04');
+INSERT INTO `reviews` VALUES (1,1,1,4,'Great book, highly recommend!','2022-01-01 00:00:00',1),(2,1,2,5,'One of my all-time favorites','2022-01-02 00:00:00',0),(3,2,1,3,'Not my favorite, but worth a read','2022-01-03 00:00:00',0),(4,3,2,4,'I loved this book and couldn\'t put it down','2022-01-04 00:00:00',0),(5,1,1,3,NULL,'2023-02-15 14:11:52',1),(6,1,1,1,'hola','2023-02-15 14:18:21',1),(7,2,1,4,'hola2','2023-02-15 14:19:06',1),(8,2,1,4,'new review','2023-02-15 19:19:49',1),(9,1,1,3,NULL,'2023-02-16 11:07:23',1);
 /*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-14 17:21:21
+-- Dump completed on 2023-02-16 19:42:52
