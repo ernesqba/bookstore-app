@@ -11,11 +11,10 @@ services:
       - frontend-service
 
   frontend-service:
-    image: bookstore-frontend-service:v2
+    image: ernesqba/bookstore-frontend-service:v2
     build:
       context: ./apps/frontend-service
       dockerfile: Dockerfile
-
     # ports:
     #   - "4000:4000"
     environment:
@@ -30,7 +29,7 @@ services:
       - reviews-service
 
   users-service:
-    image: bookstore-users-service:v2
+    image: ernesqba/bookstore-users-service:v2
     build:
       context: ./apps/users-service
       dockerfile: Dockerfile
@@ -46,7 +45,7 @@ services:
       - db
 
   books-service:
-    image: bookstore-books-service:v2
+    image: ernesqba/bookstore-books-service:v2
     build:
       context: ./apps/books-service
       dockerfile: Dockerfile
@@ -62,7 +61,7 @@ services:
       - db
 
   reviews-service:
-    image: bookstore-reviews-service:v2
+    image: ernesqba/bookstore-reviews-service:v2
     build:
       context: ./apps/reviews-service
       dockerfile: Dockerfile
