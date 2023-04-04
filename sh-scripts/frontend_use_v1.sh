@@ -1,1 +1,1 @@
-kubectl apply -f /Projects/Master/cloud/last-work/kubernetes/istio/virtual_service_v1.yaml
+kubectl apply -f $PWD/../kubernetes/istio/virtual_service_v1.yaml
